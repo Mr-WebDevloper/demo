@@ -1,0 +1,22 @@
+{
+  "name": "app-analytics",
+  "private": true,
+  "version": "1.0.0",
+  "description": "End-to-end application analytics: browser SDK, server tracker, ingestion API, dashboard, restaurant demo",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,restaurant,dashboard -c blue,green,magenta \"npm run dev -w @app-analytics/api\" \"npm run dev -w @app-analytics/restaurant\" \"npm run dev -w @app-analytics/dashboard\"",
+    "test": "npm run test --workspaces --if-present",
+    "migrate": "npm run migrate -w @app-analytics/api",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

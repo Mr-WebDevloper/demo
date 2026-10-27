@@ -1,0 +1,64 @@
+services:
+  # ── API (Node / Express) ────────────────────────────────────────────────────
+  - type: web
+    name: sdk-demo-api
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: apps/api
+    buildCommand: npm install
+    startCommand: node src/migrate.js && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sdk-demo-db
+          property: connectionString
+      - key: WRITE_KEY
+        generateValue: true
+      - key: DASHBOARD_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://sdk-demo-restaurant.onrender.com,https://sdk-demo-dashboard.onrender.com
+
+  # ── Restaurant front-end (static site) ─────────────────────────────────────
+  - type: web
+    name: sdk-demo-restaurant
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: apps/restaurant
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://sdk-demo-api.onrender.com
+      - key: VITE_WRITE_KEY
+        sync: false   # set manually in Render dashboard — copy from sdk-demo-api WRITE_KEY
+
+  # ── Dashboard front-end (static site) ──────────────────────────────────────
+  - type: web
+    name: sdk-demo-dashboard
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: apps/dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://sdk-demo-api.onrender.com
+      - key: VITE_DASHBOARD_KEY
+        sync: false   # set manually in Render dashboard — copy from sdk-demo-api DASHBOARD_KEY
+
+databases:
+  # ── Free PostgreSQL (Render managed) ────────────────────────────────────────
+  - name: sdk-demo-db
+    databaseName: analytics
+    user: analytics
+    region: oregon
+    plan: free

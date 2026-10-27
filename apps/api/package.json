@@ -1,0 +1,21 @@
+{
+  "name": "@app-analytics/api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "migrate": "node src/migrate.js",
+    "test": "node --test src/validate.test.js src/app.test.js src/store.integration.test.js"
+  },
+  "dependencies": {
+    "@app-analytics/server-sdk": "1.0.0",
+    "@electric-sql/pglite": "^0.2.17",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
